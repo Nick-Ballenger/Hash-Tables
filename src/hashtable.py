@@ -82,22 +82,35 @@ class HashTable:
     def retrieve(self, key):
         '''
         Retrieve the value stored with the given key.
-
         Returns None if the key is not found.
-
         Fill this in.
         '''
-        pass
+        bucket = self._hash_mod(key)
+        head = self.storage[bucket]
+
+        while head:
+            if head.key == key:
+                return head.value
+            head = head.next
+
+        return None
+
 
 
     def resize(self):
         '''
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
-
         Fill this in.
         '''
-        pass
+        self.capacity = self.capacity * 2
+        new_ht = HashTable(self.capacity)
+        for node in self.storage:
+            while node:
+                hm_key = self._hash_mod(node.key)
+                new_ht.insert(node.key, node.value)
+                node = node.next
+        self.storage = new_ht.storage
 
 
 
