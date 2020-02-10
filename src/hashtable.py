@@ -42,17 +42,13 @@ class HashTable:
         '''
         return self._hash(key) % self.capacity
 
-
     def insert(self, key, value):
-        '''
-        Store the value with the given key.
-
-        Hash collisions should be handled with Linked List Chaining.
-
-        Fill this in.
-        '''
-        pass
-
+        container = self._hash_mod(key)
+        node = LinkedPair(key,value)
+        node.next=self.storage[container] 
+        self.storage[container] = node
+       
+        
 
 
     def remove(self, key):
