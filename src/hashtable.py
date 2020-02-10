@@ -9,11 +9,11 @@ class LinkedPair:
 
 class HashTable:
     '''
-    A hash table that with `capacity` buckets
+    A hash table that with `capacity` containers
     that accepts string keys
     '''
     def __init__(self, capacity):
-        self.capacity = capacity  # Number of buckets in the hash table
+        self.capacity = capacity  # Number of containers in the hash table
         self.storage = [None] * capacity
 
 
@@ -37,54 +37,80 @@ class HashTable:
 
     def _hash_mod(self, key):
         '''
-        Take an arbitrary key and return a valid integer index
+        Take an arbitrary key and return a valid integer container
         within the storage capacity of the hash table.
         '''
         return self._hash(key) % self.capacity
 
-
     def insert(self, key, value):
-        '''
-        Store the value with the given key.
-
-        Hash collisions should be handled with Linked List Chaining.
-
-        Fill this in.
-        '''
-        pass
-
+        container = self._hash_mod(key)
+        node = LinkedPair(key,value)
+        node.next=self.storage[container] 
+        self.storage[container] = node
+       
+        
 
 
     def remove(self, key):
         '''
         Remove the value stored with the given key.
-
         Print a warning if the key is not found.
-
         Fill this in.
         '''
-        pass
+
+        container= self._hash_mod(key)
+        if self.storage[container] is None:
+            return
+
+        head=self.storage[container]
+        if head.key == key:
+           self.storage[container] = head.next
+           return
+
+        current= self.storage[container]
+        previous = head
+        while current:
+            if current.key ==key:
+                previous.next=current.next
+                return
+
+            else:
+                previous=current
+                current= current.next
 
 
     def retrieve(self, key):
         '''
         Retrieve the value stored with the given key.
-
         Returns None if the key is not found.
-
         Fill this in.
         '''
-        pass
+        bucket = self._hash_mod(key)
+        head = self.storage[bucket]
+
+        while head:
+            if head.key == key:
+                return head.value
+            head = head.next
+
+        return None
+
 
 
     def resize(self):
         '''
         Doubles the capacity of the hash table and
         rehash all key/value pairs.
-
         Fill this in.
         '''
-        pass
+        self.capacity = self.capacity * 2
+        new_ht = HashTable(self.capacity)
+        for node in self.storage:
+            while node:
+                hm_key = self._hash_mod(node.key)
+                new_ht.insert(node.key, node.value)
+                node = node.next
+        self.storage = new_ht.storage
 
 
 
